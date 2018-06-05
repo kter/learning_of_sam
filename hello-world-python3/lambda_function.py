@@ -1,12 +1,16 @@
-import json
+# import json
+import boto3
 
 print('Loading function')
+ec2_client = boto3.client('ec2', region_name='ap-northeast-1')
 
 
 def lambda_handler(event, context):
-    #print("Received event: " + json.dumps(event, indent=2))
-    print("value1 = " + event['key1'])
+    response = ec2_client.describe_instances()
+    for ec2_group in response['Reservations']:
+        for instance_info in ec2_group['Instances']:
+            print(instance_info)
+
     print("value2 = " + event['key2'])
     print("value3 = " + event['key3'])
     return event['key1']  # Echo back the first key value
-    #raise Exception('Something went wrong')
