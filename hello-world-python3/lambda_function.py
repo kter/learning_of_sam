@@ -9,8 +9,6 @@ def lambda_handler(event, context):
     response = ec2_client.describe_instances()
     for ec2_group in response['Reservations']:
         for instance_info in ec2_group['Instances']:
-            print(instance_info)
+            print(instance_info['InstanceId'])
 
-    print("value2 = " + event['key2'])
-    print("value3 = " + event['key3'])
-    return event['key1']  # Echo back the first key value
+    return True
