@@ -15,10 +15,11 @@ def lambda_handler(event, context):
         ).Table("backup_exclude_list")
     else:
         backup_exclude_list = boto3.resource('dynamodb').Table(os.getenv('TABLE_NAME'))
-    resp = backup_exclude_list.scan()
+    resp = backup_exclude_list.scan()['Items']
 
     # print json.dumps({item['instanceid']: int(item['votes']) for item in resp['Items']})
-    print(resp['Items'])
+    for exclude_instance in resp:
+        print(exclude_instance)
 
     response = ec2_client.describe_instances()
     for ec2_group in response['Reservations']:
