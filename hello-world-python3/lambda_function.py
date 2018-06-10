@@ -1,4 +1,5 @@
 # import json
+# TODO Add test
 import boto3
 import os
 
@@ -16,16 +17,24 @@ def lambda_handler(event, context):
             boto3.resource('dynamodb').Table(os.getenv('TABLE_NAME'))
     resp = backup_exclude_list.scan()['Items']
 
-    print("exclude instances")
-    for exclude in resp:
-        print(exclude['instanceid'])
-
-    print("instances")
+    # print("instances")
     # TODO classified
     ec2_client = boto3.client('ec2', region_name='ap-northeast-1')
     response = ec2_client.describe_instances()
+    instances = []
     for ec2_group in response['Reservations']:
         for instance in ec2_group['Instances']:
-            print(instance['InstanceId'])
+            # print(instance['InstanceId'])
+            instances.append(instance['InstanceId'])
 
-    return True
+    print("exclude instances")
+    for exclude in resp:
+        # print(exclude['instanceid'])
+        # excludes.append(exclude['instanceid'])
+        try:
+            instances.remove(exclude['instanceid'])
+        except ValueError:
+            print('Exclude instance non exist error ({0})'.format(exclude))
+            pass
+
+    return instances
