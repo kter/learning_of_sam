@@ -12,10 +12,23 @@ def lambda_handler(event, context):
             'dynamodb',
             endpoint_url="http://docker.for.mac.host.internal:8000/"
         ).Table("backup_exclude_list")
+        sqs = boto3.resource('sqs',
+                             endpoint_url='http://docker.for.mac.host.internal:9324',
+                             region_name='elasticmq',
+                             aws_secret_access_key='x',
+                             aws_access_key_id='x',
+                             use_ssl=False)
     else:
         backup_exclude_list = \
             boto3.resource('dynamodb').Table(os.getenv('TABLE_NAME'))
+        sqs = boto3.resource('sqs',
+                             region_name='ap-northeast-1',)
     resp = backup_exclude_list.scan()['Items']
+    queue = sqs.get_queue_by_name(QueueName='createSnapshot')
+    # try:
+    #     queue = sqs.get_queue_by_name(QueueName='createSnapshot')
+    # except:
+    #     queue = sqs.create_queue(QueueName='createSnapshot')
 
     # print("instances")
     # TODO classified
@@ -36,5 +49,9 @@ def lambda_handler(event, context):
         except ValueError:
             print('Exclude instance non exist error ({0})'.format(exclude))
             pass
+
+    print(instances)
+    for instance in instances:
+        response = queue.send_message(MessageBody=instance)
 
     return instances
