@@ -30,28 +30,28 @@ def lambda_handler(event, context):
     except:
         queue = sqs.create_queue(QueueName='createSnapshot')
 
-    # print("instances")
+    print("instances:")
     # TODO classified
     ec2_client = boto3.client('ec2', region_name='ap-northeast-1')
     response = ec2_client.describe_instances()
     instances = []
     for ec2_group in response['Reservations']:
         for instance in ec2_group['Instances']:
-            # print(instance['InstanceId'])
+            print(instance['InstanceId'])
             instances.append(instance['InstanceId'])
 
-    print("exclude instances")
+    print("exclude instances:")
     for exclude in resp:
-        # print(exclude['instanceid'])
-        # excludes.append(exclude['instanceid'])
+        print(exclude['instanceid'])
         try:
             instances.remove(exclude['instanceid'])
         except ValueError:
-            print('Exclude instance non exist error ({0})'.format(exclude))
+            print('Exclude instance does not exist ({0})'.format(exclude))
             pass
 
-    print(instances)
+    print("backup instances:")
     for instance in instances:
+        print(instance)
         response = queue.send_message(MessageBody=instance)
 
-    return instances
+    return True
