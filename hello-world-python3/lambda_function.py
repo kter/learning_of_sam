@@ -24,11 +24,11 @@ def lambda_handler(event, context):
         sqs = boto3.resource('sqs',
                              region_name='ap-northeast-1',)
     resp = backup_exclude_list.scan()['Items']
-    queue = sqs.get_queue_by_name(QueueName='createSnapshot')
-    # try:
-    #     queue = sqs.get_queue_by_name(QueueName='createSnapshot')
-    # except:
-    #     queue = sqs.create_queue(QueueName='createSnapshot')
+    try:
+        queue = sqs.get_queue_by_name(QueueName='createSnapshot')
+    # AWS.SimpleQueueService.NonExistentQueueが返るが例外ではない？ためexceptに設定できない
+    except:
+        queue = sqs.create_queue(QueueName='createSnapshot')
 
     # print("instances")
     # TODO classified
