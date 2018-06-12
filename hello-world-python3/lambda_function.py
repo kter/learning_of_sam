@@ -10,10 +10,10 @@ def lambda_handler(event, context):
     if os.getenv("AWS_SAM_LOCAL"):
         backup_exclude_list = boto3.resource(
             'dynamodb',
-            endpoint_url="http://docker.for.mac.host.internal:8000/"
+            endpoint_url="http://docker.for.mac.host.internal:4569/"
         ).Table("backup_exclude_list")
         sqs = boto3.resource('sqs',
-                             endpoint_url='http://docker.for.mac.host.internal:9324',
+                             endpoint_url='http://docker.for.mac.host.internal:4576',
                              region_name='elasticmq',
                              aws_secret_access_key='x',
                              aws_access_key_id='x',
