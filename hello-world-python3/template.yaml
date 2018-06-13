@@ -11,6 +11,9 @@ Resources:
       Description: A starter AWS Lambda function.
       MemorySize: 128
       Timeout: 3
+      Environment:
+        Variables:
+          TABLE_NAME: backup_exclude_list
   backup_exclude_list:
     Type: 'AWS::DynamoDB::Table'
     Properties:
