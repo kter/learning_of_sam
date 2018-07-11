@@ -20,10 +20,6 @@ Resources:
             Effect: Allow
             Resource:
             - Fn::Sub: arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*
-          Version: '2012-10-17'
-        PolicyName: SSMAccess
-      - PolicyDocument:
-          Statement:
           - Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
@@ -31,11 +27,11 @@ Resources:
             Resource:
             - Fn::Sub: arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${AWS::StackName}:*
           Version: '2012-10-17'
-        PolicyName: AssumeRole
+        PolicyName: Logging
     Type: AWS::IAM::Role
   main:
     Properties:
-      CodeUri: s3://kter-serverless-repository/ba9c199b35ceab2417a00e9c3f2e6582
+      CodeUri: s3://kter-serverless-repository/b0cebaf444b6dacf7437ef9c06c24867
       Handler: main.lambda_handler
       MemorySize: 128
       Role:

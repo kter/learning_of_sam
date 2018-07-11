@@ -22,7 +22,7 @@ Resources:
         Version: '2012-10-17'
      Path: /
      Policies:
-       - PolicyName: SSMAccess
+       - PolicyName: Logging
          PolicyDocument:
            Version: '2012-10-17'
            Statement:
@@ -32,10 +32,6 @@ Resources:
                  - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
                Action:
                  - "logs:CreateLogGroup"
-       - PolicyName: AssumeRole
-         PolicyDocument:
-           Version: '2012-10-17'
-           Statement:
              - 
                Effect: "Allow"
                Resource:
