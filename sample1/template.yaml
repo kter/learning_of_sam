@@ -20,3 +20,26 @@ Resources:
           Principal:
             Service: ['lambda.amazonaws.com']
         Version: '2012-10-17'
+     Path: /
+     Policies:
+       - PolicyName: SSMAccess
+         PolicyDocument:
+           Version: '2012-10-17'
+           Statement:
+             - 
+               Effect: "Allow"
+               Resource:
+                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:*"
+               Action:
+                 - "logs:CreateLogGroup"
+       - PolicyName: AssumeRole
+         PolicyDocument:
+           Version: '2012-10-17'
+           Statement:
+             - 
+               Effect: "Allow"
+               Resource:
+                 - !Sub "arn:aws:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/${AWS::StackName}:*"
+               Action:
+                 - "logs:CreateLogStream"
+                 - "logs:PutLogEvents"
