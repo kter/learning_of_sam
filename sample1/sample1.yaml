@@ -1,0 +1,27 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Resources:
+  lambdaRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action:
+          - sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+        Version: '2012-10-17'
+    Type: AWS::IAM::Role
+  main:
+    Properties:
+      CodeUri: s3://kter-serverless-repository/54e22d354116bb45da5b68a55856b488
+      Handler: main.lambda_handler
+      MemorySize: 128
+      Role:
+        Fn::GetAtt:
+        - lambdaRole
+        - Arn
+      Runtime: python3.6
+      Timeout: 10
+    Type: AWS::Serverless::Function
+Transform: AWS::Serverless-2016-10-31
